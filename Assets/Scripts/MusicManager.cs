@@ -28,10 +28,25 @@ public class MusicManager : MonoBehaviour {
     public TimelineInfo timelineInfo = null;
     private GCHandle timelineHandle;
 
+    private bool keyPressed = false;
+    private int keyPos = 0;
+    private int keyTimer = 0;
+    private int lastMarkerPos = 0;
+
+    //defines how close the player must hit the key for it to count
+    //measured in ms
+    public int hitWindow = 200;
+    public int hitOffset = 50;
+
+    // Variables that are modified in the callback need to be part of a seperate class.
+    // This class needs to be 'blittable' otherwise it can't be pinned in memory.
     [StructLayout(LayoutKind.Sequential)]
     public class TimelineInfo {
         public int currentBeat = 0;
+        public int currentBar = 0;
+        public int currentPos = 0;
         public FMOD.StringWrapper lastMarker = new FMOD.StringWrapper();
+        public int markerPos = 0;
     }
 
     //Play music on startup, if music exists
@@ -58,6 +73,40 @@ public class MusicManager : MonoBehaviour {
         }
     }
 
+    //called every frame
+    void Update() {
+        RhythmCheck();
+    }
+
+    //check for rudimentary user input, and whether said input is close to an FMOD Marker
+    void RhythmCheck() {
+        if (Input.GetKeyDown("space")) {
+            musicInstance.getTimelinePosition(out keyPos);
+            int diff = keyPos - timelineInfo.markerPos;
+            Debug.Log("Proximity to Marker: " + diff);
+            keyPressed = true;
+        }
+
+        if (keyPressed) {
+            int currentPos;
+            musicInstance.getTimelinePosition(out currentPos);
+            keyTimer = currentPos - keyPos;
+
+            if (keyTimer > hitWindow) {
+                keyPressed = false;
+                keyTimer = 0;
+                Debug.Log("Miss :<");
+            }
+
+            int diff = keyPos - timelineInfo.markerPos - hitOffset;
+            if (diff > 0 - hitWindow && diff < hitWindow) {
+                Debug.Log("Hit! :>");
+                lastMarkerPos = timelineInfo.markerPos;
+                keyPressed = false;
+            }
+        }
+    }
+
     //Stop music when object is destroyed
     private void OnDestroy() {
         musicInstance.setUserData(IntPtr.Zero); //remove userdata
@@ -66,8 +115,9 @@ public class MusicManager : MonoBehaviour {
         timelineHandle.Free(); //free data manually to avoid leaks
     }
 
+    //GUI to display debug info
     void OnGUI() {
-        GUILayout.Box($"Current beat = {timelineInfo.currentBeat}, Last Marker = {(string)timelineInfo.lastMarker}");
+        GUILayout.Box($"Current beat = {timelineInfo.currentBeat}, Current Bar = {timelineInfo.currentBar}, Last Marker = {(string)timelineInfo.lastMarker}");
     }
 
     [AOT.MonoPInvokeCallback(typeof(FMOD.Studio.EVENT_CALLBACK))]
@@ -89,12 +139,14 @@ public class MusicManager : MonoBehaviour {
                     {
                     var parameter = (FMOD.Studio.TIMELINE_BEAT_PROPERTIES)Marshal.PtrToStructure(parameterPtr, typeof(FMOD.Studio.TIMELINE_BEAT_PROPERTIES));
                     timelineInfo.currentBeat = parameter.beat;
+                    timelineInfo.currentBar = parameter.bar;
                     }
                     break;
                 case FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_MARKER:
                     {
                     var parameter = (FMOD.Studio.TIMELINE_MARKER_PROPERTIES)Marshal.PtrToStructure(parameterPtr, typeof(FMOD.Studio.TIMELINE_MARKER_PROPERTIES));
                     timelineInfo.lastMarker = parameter.name;
+                    timelineInfo.markerPos = parameter.position;
                     }
                     break;
             }
