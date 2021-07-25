@@ -49,6 +49,7 @@ public class MusicManager : MonoBehaviour {
         if (music != null) {
             //instantiate variables if music exists
             timelineInfo = new TimelineInfo();
+            //this links to BeatEventCallback() below
             beatCallback = new FMOD.Studio.EVENT_CALLBACK(BeatEventCallback);
             //this variable is pinned, meaning it ignores garbage collection
             timelineHandle = GCHandle.Alloc(timelineInfo, GCHandleType.Pinned);
