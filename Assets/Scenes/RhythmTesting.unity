@@ -251,6 +251,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   music: event:/RhythmTesting/Music
+  hitWindow: 200
+  hitOffset: 25
 --- !u!4 &2092394539
 Transform:
   m_ObjectHideFlags: 0
