@@ -37,7 +37,7 @@ public class MusicManager : MonoBehaviour {
     public TextAsset markerInfoJSON; //where is FMOD's full marker info stored?
     private int currentMarkerNum = 0;
 
-    #region MarkerInfo
+    #region Marker Info
     // class for extracting all marker data from MarkerInfo.json
     [Serializable]
     public class MarkerInfo {
@@ -49,21 +49,19 @@ public class MusicManager : MonoBehaviour {
 
     void InitMarkers() {
         Debug.Log("Reading JSON...");
-            string json = markerInfoJSON.text;
-            markerInfo = JsonUtility.FromJson<MarkerInfo>(json);
-            input.prevMarkerPos = 0;
-            Debug.Log("Start: " + input.prevMarkerPos);
-            input.nextMarkerPos = (int) (markerInfo.markers[0].position * 1000);
+        string json = markerInfoJSON.text;
+        markerInfo = JsonUtility.FromJson<MarkerInfo>(json);
+        input.prevMarkerPos = 0;
+        Debug.Log("Start: " + input.prevMarkerPos);
+        input.nextMarkerPos = (int) (markerInfo.markers[0].position * 1000);
     }
 
     // Advance position in the markers array when a marker is passed
     void UpdateMarkers() {
-        if (input.prevMarkerPos < timelineInfo.markerPos) {
-            input.prevMarkerPos = (int) (markerInfo.markers[currentMarkerNum].position * 1000);
-            Debug.Log(markerInfo.markers[currentMarkerNum].name + ": " + input.prevMarkerPos);
-            input.nextMarkerPos = (int) (markerInfo.markers[currentMarkerNum + 1].position * 1000);
-            ++currentMarkerNum;
-        }
+        input.prevMarkerPos = (int) (markerInfo.markers[currentMarkerNum].position * 1000);
+        Debug.Log(markerInfo.markers[currentMarkerNum].name + ": " + input.prevMarkerPos);
+        input.nextMarkerPos = (int) (markerInfo.markers[currentMarkerNum + 1].position * 1000);
+        ++currentMarkerNum;
     }
     #endregion
     
@@ -137,6 +135,7 @@ public class MusicManager : MonoBehaviour {
     }
     #endregion
 
+    #region Unity Functions
     // Play music on startup, if music exists
     private void Awake() {
         instance = this;
@@ -160,7 +159,9 @@ public class MusicManager : MonoBehaviour {
 
     // called every frame
     void Update() {
-        UpdateMarkers();
+        if (input.prevMarkerPos < timelineInfo.markerPos) {
+            UpdateMarkers();
+        }
     }
 
     // Stop music when object is destroyed
@@ -172,6 +173,5 @@ public class MusicManager : MonoBehaviour {
     void OnGUI() {
         GUILayout.Box($"Current beat = {timelineInfo.currentBeat}, Current Bar = {timelineInfo.currentBar}, Last Marker = {(string)timelineInfo.lastMarker}");
     }
-
-    
+    #endregion
 }

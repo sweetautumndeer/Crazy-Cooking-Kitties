@@ -30,27 +30,27 @@ public class PlayerInput : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        RhythmCheck();
+        if (Input.GetKeyDown("space")) {
+            RhythmCheck();
+        }
     }
 
     // Check wether input is close to an FMOD Marker
     void RhythmCheck() {
-        if (Input.GetKeyDown("space")) {
-            // Where was the key pressed in ms?
-            musicInstance.getTimelinePosition(out keyPos);
+        // Where was the key pressed in ms?
+        musicInstance.getTimelinePosition(out keyPos);
 
-            // Calculate proximity to nearest marker
-            int diffLeft = keyPos - prevMarkerPos;
-            int diffRight = keyPos - nextMarkerPos;
-            int diff = (diffLeft < -diffRight)? diffLeft : diffRight;
-            Debug.Log("Proximity to Marker: " + diff);
+        // Calculate proximity to nearest marker
+        int diffLeft = keyPos - prevMarkerPos;
+        int diffRight = keyPos - nextMarkerPos;
+        int diff = (diffLeft < -diffRight)? diffLeft : diffRight;
+        Debug.Log("Proximity to Marker: " + diff);
 
-            // If within the hit window, the note was hit
-            if (diff > 0 - hitWindow + hitOffset && diff < hitWindow + hitOffset) {
-                Debug.Log("Hit! :>");
-            } else {
-                Debug.Log("Miss :<");
-            }
+        // If within the hit window, the note was hit
+        if (diff > 0 - hitWindow + hitOffset && diff < hitWindow + hitOffset) {
+            Debug.Log("Hit! :>");
+        } else {
+            Debug.Log("Miss :<");
         }
     }
 }
