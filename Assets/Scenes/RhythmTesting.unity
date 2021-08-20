@@ -396,7 +396,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1552750276}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 0, z: 0}
+  m_LocalPosition: {x: 13.03, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1415462408}
@@ -426,7 +426,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1933045551}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.02, y: 0, z: 0}
+  m_LocalPosition: {x: -13.06, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1415462408}
@@ -561,7 +561,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e69b78ac83d15e241b3e6f0557e2029c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  music: event:/RhythmTesting/Music
+  music: event:/Music/Level1-1
   markerInfoJSON: {fileID: 4900000, guid: c1576d5f2ca96e14e85067ba7249a298, type: 3}
 --- !u!4 &2092394539
 Transform:
@@ -592,6 +592,7 @@ MonoBehaviour:
   hitWindow: 200
   hitOffset: 50
   keyPos: 0
+  missed: 0
   prevMarkerPos: 0
   nextMarkerPos: 0
   nextnextMarkerPos: 0
@@ -614,13 +615,5 @@ MonoBehaviour:
   nextnextMarkerName: 
   smallFish: {fileID: 1085722544313714821, guid: 00f15d921a2845048b461ed2736cf4b8, type: 3}
   mediumFish: {fileID: 2451503106343519238, guid: a301209d931e86543b653e21932e6283, type: 3}
-  longFish: {fileID: 0}
-  center: {fileID: 546020020}
-  topSpawn: {fileID: 592670683}
-  top: {fileID: 1250030895}
-  leftSpawn: {fileID: 1933045552}
-  left: {fileID: 754730481}
-  rightSpawn: {fileID: 1552750277}
-  right: {fileID: 1274348321}
-  bottomSpawn: {fileID: 500767226}
-  bottom: {fileID: 1346664185}
+  longFish: {fileID: 7876710865128261389, guid: 526f7aaf5d7a94b448411c797be091ec, type: 3}
+  fishWaypoints: {fileID: 1415462408}

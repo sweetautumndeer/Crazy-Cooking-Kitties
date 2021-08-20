@@ -21,6 +21,7 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour {
     
+    // Script instances
     public static MusicManager instance;
     private PlayerInput input;
     private FishHandler fish;
@@ -35,18 +36,19 @@ public class MusicManager : MonoBehaviour {
     public TimelineInfo timelineInfo = null;
     private GCHandle timelineHandle; 
 
-    private MarkerInfo markerInfo;
+    private MarkerInfo markerInfo;   // class instance for dumping JSON info into
+    public TextAsset markerInfoJSON; // where is FMOD's full marker info stored?
     private string currentMarker;
-    public TextAsset markerInfoJSON; //where is FMOD's full marker info stored?
-    private int inputMarkerNum = 0;
-    private int fishMarkerNum = 0;
-
-    private List<Marker> Fish;
-    private List<Marker> Notes;
-
-    #region Marker Info
+    
+    
     
 
+    private List<Marker> Fish;      // defines upcoming fish
+    private int fishMarkerNum = 0;  // position in Fish list
+    private List<Marker> Notes;     // notes that the player must hit during gameplay
+    private int inputMarkerNum = 0; // position in Notes List
+
+    #region Marker Info
     [Serializable]
     public class Marker { public String name; public float position; }
     
@@ -80,11 +82,9 @@ public class MusicManager : MonoBehaviour {
         fish.InitFish();
     }
 
-    // Advance position in the markers array when a marker is passed
+    // Advance position in the Notes array when a "Hit" marker is passed
     void UpdateInputMarkers() {
         input.prevMarkerPos = input.nextMarkerPos;
-        //if (Notes.Count > inputMarkerNum)
-            //Debug.Log(Notes[inputMarkerNum].name + ": " + input.prevMarkerPos);
         input.nextMarkerPos = input.nextnextMarkerPos;
 
         if (Notes.Count > inputMarkerNum + 2) {
@@ -93,11 +93,12 @@ public class MusicManager : MonoBehaviour {
             input.nextnextMarkerPos = 99999999; //so far away it'll never be hit
         }
 
+        ++input.currentNote;
         ++inputMarkerNum;
     }
 
+    // Advance position in the Fish array
     void UpdateFishMarkers() {
-        Debug.Log("hey");
         fish.prevMarkerPos = fish.nextMarkerPos;
         if (Fish.Count > fishMarkerNum + 1)
             fish.nextMarkerPos = (int) (Fish[fishMarkerNum + 1].position * 1000);
@@ -108,7 +109,6 @@ public class MusicManager : MonoBehaviour {
         //Debug.Log(fish.prevMarkerName);
         fish.nextMarkerName = fish.nextnextMarkerName;
 
-        Debug.Log(Fish.Count);
         if (Fish.Count > fishMarkerNum + 2) {
             fish.nextnextMarkerName = Fish[fishMarkerNum + 2].name;
         } else {

@@ -17,11 +17,9 @@
 [LOG] Manager::init                            : done.
 [LOG] Manager::readBank                        : fileversion = 135, compatVersion = 132 (oldest = 44, newest = 135)
 [LOG] Manager::readBank                        : fileversion = 135, compatVersion = 132 (oldest = 44, newest = 135)
-[LOG] Manager::readBank                        : fileversion = 135, compatVersion = 132 (oldest = 44, newest = 135)
-[LOG] Manager::readBank                        : fileversion = 135, compatVersion = 132 (oldest = 44, newest = 135)
-[LOG] SoundI::release                          : Track2 (0000024D9BCEBE08)
-[LOG] SoundI::release                          :     Track2 (0000024DB85C3638)
-[LOG] SoundI::release                          :     Track2 (0000024E1DA65CC8)
+[LOG] SoundI::release                          : Track2 (0000024D9D7AE218)
+[LOG] SoundI::release                          :     Track2 (0000024E1DEF6EF8)
+[LOG] SoundI::release                          :     Track2 (0000024D9BCEBE08)
 [LOG] Thread::callback                         : FMOD Studio update thread finished.
 [LOG] Thread::callback                         : FMOD Studio bank load thread finished.
 [LOG] Profile::disconnectAll                   : Profiler disconnecting all clients

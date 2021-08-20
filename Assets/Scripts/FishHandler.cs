@@ -27,15 +27,16 @@ public class FishHandler : MonoBehaviour {
     public Transform longFish;
 
     // fish waypoints
-    public Transform center;
-    public Transform topSpawn;
-    public Transform top;
-    public Transform leftSpawn;
-    public Transform left;
-    public Transform rightSpawn;
-    public Transform right;
-    public Transform bottomSpawn;
-    public Transform bottom;
+    public Transform fishWaypoints;
+    public static Transform center;
+    public static Transform topSpawn;
+    public static Transform top;
+    public static Transform leftSpawn;
+    public static Transform left;
+    public static Transform rightSpawn;
+    public static Transform right;
+    public static Transform bottomSpawn;
+    public static Transform bottom;
 
     private Fish spawningFish;
     private Fish currentFish;
@@ -44,32 +45,44 @@ public class FishHandler : MonoBehaviour {
     private static float timeElapsed = 0;
     private static float lerpDuration = 1;
 
+    #region Fish Class and Functions
     private class Fish {
         public Transform fish;
         public Transform spawnLocation;
         public Transform midLocation;
-        public Transform center;
         public Transform endLocation;
+        public int state = 0;
 
-        public Fish(Transform fish, Transform spawnLocation, Transform midLocation, Transform center, Transform endLocation) {
+        public Fish(Transform fish, string startingPos) {
+            switch (startingPos) {
+                case "top":
+                    this.spawnLocation = topSpawn;
+                    this.midLocation = top;
+                    this.endLocation = bottomSpawn;
+                    break;
+                case "left":
+                    this.spawnLocation = leftSpawn;
+                    this.midLocation = left;
+                    this.endLocation = rightSpawn;
+                    break;
+                case "right":
+                    this.spawnLocation = rightSpawn;
+                    this.midLocation = right;
+                    this.endLocation = leftSpawn;
+                    break;
+                case "bottom":
+                    this.spawnLocation = bottomSpawn;
+                    this.midLocation = bottom;
+                    this.endLocation = topSpawn;
+                    break;
+            }
+
             this.fish = MonoBehaviour.Instantiate(fish, spawnLocation.position, Quaternion.identity);
-            this.spawnLocation = spawnLocation;
-            this.midLocation = midLocation;
-            this.center = center;
-            this.endLocation = endLocation;
         }
 
-        public void Spawn() {
-            Animate(spawnLocation, midLocation);
-        }
-
-        public void Center() {
-            Animate(midLocation, center);
-        }
-
-        public void Leave() {
-            Animate(center, endLocation);
-        }
+        public void Spawn() { Animate(spawnLocation, midLocation); }
+        public void Center() { Animate(midLocation, center); }
+        public void Leave() { Animate(center, endLocation); }
 
         void Animate(Transform start, Transform end) {
             if (timeElapsed < lerpDuration) {
@@ -82,9 +95,68 @@ public class FishHandler : MonoBehaviour {
         }
     }
 
+    public void InitFish() {
+        ParseNextFishType(nextMarkerName);
+    }
+
+    public void AdvanceFish() {
+        timeElapsed = 0;
+        if (leavingFish != null)
+            Destroy(leavingFish.fish.gameObject);
+        leavingFish = currentFish;
+        currentFish = spawningFish;
+        ParseNextFishType(nextnextMarkerName);
+    }
+
+    void ParseNextFishType(string markerName) {
+        switch (markerName) {
+            case "Long Fish":
+                {
+                spawningFish = new Fish(longFish, "left");
+                }
+                break;
+            case "Medium Fish":
+                {
+                spawningFish = new Fish(mediumFish, "left");
+                }
+                break;
+            case "Small Fish":
+                {
+                spawningFish = new Fish(smallFish, "top");
+                }
+                break;
+            case "End":
+                spawningFish = null;
+                break;
+        }
+    }
+
+    public void HitFish() {
+        Transform slice = currentFish.fish.GetChild(currentFish.state++);
+        slice.GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
+    }
+
+    public void MissFish() {
+        Transform slice = currentFish.fish.GetChild(currentFish.state++);
+        slice.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+    }
+    #endregion
+
+    #region Unity Functions
     // Start is called before the first frame update
     void Awake() {
         instance = this;
+
+        //init waypoints
+        center = fishWaypoints.GetChild(0);
+        topSpawn = fishWaypoints.GetChild(1);
+        top = fishWaypoints.GetChild(2);
+        leftSpawn = fishWaypoints.GetChild(3);
+        left = fishWaypoints.GetChild(4);
+        rightSpawn = fishWaypoints.GetChild(5);
+        right = fishWaypoints.GetChild(6);
+        bottomSpawn = fishWaypoints.GetChild(7);
+        bottom = fishWaypoints.GetChild(8);
     }
 
     // Update is called once per frame
@@ -97,41 +169,7 @@ public class FishHandler : MonoBehaviour {
             leavingFish.Leave();
         timeElapsed += Time.deltaTime;
     }
+    #endregion
 
-    public void InitFish() {
-        ParseNextFishType(nextMarkerName);
-    }
-
-    public void AdvanceFish() {
-        timeElapsed = 0;
-        if (leavingFish != null)
-            Destroy(leavingFish.fish.gameObject);
-        leavingFish = currentFish;
-        currentFish = spawningFish;
-        Debug.Log(nextnextMarkerName);
-        ParseNextFishType(nextnextMarkerName);
-    }
-
-    void ParseNextFishType(string markerName) {
-        switch (markerName) {
-            case "Long Fish":
-                {
-                spawningFish = new Fish(longFish, leftSpawn, left, center, rightSpawn);
-                }
-                break;
-            case "Medium Fish":
-                {
-                spawningFish = new Fish(mediumFish, leftSpawn, left, center, rightSpawn);
-                }
-                break;
-            case "Small Fish":
-                {
-                spawningFish = new Fish(smallFish, topSpawn, top, center, bottomSpawn);
-                }
-                break;
-            case "End":
-                spawningFish = null;
-                break;
-        }
-    }
+    
 }
