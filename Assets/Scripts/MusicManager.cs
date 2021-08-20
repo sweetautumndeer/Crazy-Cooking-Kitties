@@ -39,14 +39,13 @@ public class MusicManager : MonoBehaviour {
     private MarkerInfo markerInfo;   // class instance for dumping JSON info into
     public TextAsset markerInfoJSON; // where is FMOD's full marker info stored?
     private string currentMarker;
-    
-    
-    
 
     private List<Marker> Fish;      // defines upcoming fish
+    private List<string> directions;
     private int fishMarkerNum = 0;  // position in Fish list
     private List<Marker> Notes;     // notes that the player must hit during gameplay
     private int inputMarkerNum = 0; // position in Notes List
+
 
     #region Marker Info
     [Serializable]
@@ -63,10 +62,13 @@ public class MusicManager : MonoBehaviour {
 
         Fish = new List<Marker>();
         Notes = new List<Marker>();
+        directions = new List<string>();
 
         foreach (Marker x in markerInfo.markers) {
             if (x.name == "Hit")
                 Notes.Add(x);
+            else if (x.name == "Top" || x.name == "Left" || x.name == "Right" || x.name == "Bottom")
+                directions.Add(x.name);
             else if (x.name != "Advance")
                 Fish.Add(x);
         }
@@ -79,7 +81,7 @@ public class MusicManager : MonoBehaviour {
         input.nextnextMarkerPos = (int) (Notes[1].position * 1000);
         fish.nextnextMarkerName = Fish[1].name;
 
-        fish.InitFish();
+        fish.InitFish(directions[0]);
     }
 
     // Advance position in the Notes array when a "Hit" marker is passed
@@ -222,8 +224,12 @@ public class MusicManager : MonoBehaviour {
             UpdateFishMarkers();
         if (currentMarker != timelineInfo.lastMarker) {
             currentMarker = timelineInfo.lastMarker;
-            if (timelineInfo.lastMarker == "Advance")
-                fish.AdvanceFish();
+            if (timelineInfo.lastMarker == "Advance") {
+                if (directions.Count > fishMarkerNum + 1)
+                    fish.AdvanceFish(directions[fishMarkerNum + 1]);
+                else
+                    fish.AdvanceFish("top");
+            }
         }  
     }
 

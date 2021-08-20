@@ -59,25 +59,25 @@ public class FishHandler : MonoBehaviour {
             this.startingPos = startingPos;
 
             switch (startingPos) {
-                case "top":
+                case "Top":
                     this.spawnLocation = topSpawn;
                     this.midLocation = top;
                     this.endLocation = bottomSpawn;
                     rotation = Quaternion.identity;
                     break;
-                case "left":
+                case "Left":
                     this.spawnLocation = leftSpawn;
                     this.midLocation = left;
                     this.endLocation = rightSpawn;
                     rotation = Quaternion.Euler(Vector3.forward * 90);
                     break;
-                case "right":
+                case "Right":
                     this.spawnLocation = rightSpawn;
                     this.midLocation = right;
                     this.endLocation = leftSpawn;
                     rotation = Quaternion.Euler(Vector3.forward * 270);
                     break;
-                case "bottom":
+                case "Bottom":
                     this.spawnLocation = bottomSpawn;
                     this.midLocation = bottom;
                     this.endLocation = topSpawn;
@@ -103,34 +103,34 @@ public class FishHandler : MonoBehaviour {
         }
     }
 
-    public void InitFish() {
-        ParseNextFishType(nextMarkerName);
+    public void InitFish(string direction) {
+        ParseNextFishType(nextMarkerName, direction);
     }
 
-    public void AdvanceFish() {
+    public void AdvanceFish(string direction) {
         timeElapsed = 0;
         if (leavingFish != null)
             Destroy(leavingFish.fish.gameObject);
         leavingFish = currentFish;
         currentFish = spawningFish;
-        ParseNextFishType(nextnextMarkerName);
+        ParseNextFishType(nextnextMarkerName, direction);
     }
 
-    void ParseNextFishType(string markerName) {
+    void ParseNextFishType(string markerName, string direction) {
         switch (markerName) {
             case "Long Fish":
                 {
-                spawningFish = new Fish(longFish, "left");
+                spawningFish = new Fish(longFish, direction);
                 }
                 break;
             case "Medium Fish":
                 {
-                spawningFish = new Fish(mediumFish, "left");
+                spawningFish = new Fish(mediumFish, direction);
                 }
                 break;
             case "Small Fish":
                 {
-                spawningFish = new Fish(smallFish, "top");
+                spawningFish = new Fish(smallFish, direction);
                 }
                 break;
             case "End":
