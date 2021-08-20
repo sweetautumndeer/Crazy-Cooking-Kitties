@@ -52,32 +52,40 @@ public class FishHandler : MonoBehaviour {
         public Transform midLocation;
         public Transform endLocation;
         public int state = 0;
+        public string startingPos;
 
         public Fish(Transform fish, string startingPos) {
+            Quaternion rotation = Quaternion.identity;
+            this.startingPos = startingPos;
+
             switch (startingPos) {
                 case "top":
                     this.spawnLocation = topSpawn;
                     this.midLocation = top;
                     this.endLocation = bottomSpawn;
+                    rotation = Quaternion.identity;
                     break;
                 case "left":
                     this.spawnLocation = leftSpawn;
                     this.midLocation = left;
                     this.endLocation = rightSpawn;
+                    rotation = Quaternion.Euler(Vector3.forward * 90);
                     break;
                 case "right":
                     this.spawnLocation = rightSpawn;
                     this.midLocation = right;
                     this.endLocation = leftSpawn;
+                    rotation = Quaternion.Euler(Vector3.forward * 270);
                     break;
                 case "bottom":
                     this.spawnLocation = bottomSpawn;
                     this.midLocation = bottom;
                     this.endLocation = topSpawn;
+                    rotation = Quaternion.Euler(Vector3.forward * 180);
                     break;
             }
 
-            this.fish = MonoBehaviour.Instantiate(fish, spawnLocation.position, Quaternion.identity);
+            this.fish = MonoBehaviour.Instantiate(fish, spawnLocation.position, rotation);
         }
 
         public void Spawn() { Animate(spawnLocation, midLocation); }
