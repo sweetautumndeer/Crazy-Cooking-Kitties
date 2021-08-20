@@ -23,6 +23,7 @@ public class PlayerInput : MonoBehaviour {
     [HideInInspector] public int keyPos = 0;
     [HideInInspector] public int prevMarkerPos = 0;
     [HideInInspector] public int nextMarkerPos = 0;
+    [HideInInspector] public int nextnextMarkerPos = 0;
 
     void Awake() {
         instance = this;

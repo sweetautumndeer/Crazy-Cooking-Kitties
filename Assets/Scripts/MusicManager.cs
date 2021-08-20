@@ -12,6 +12,8 @@ https://www.fmod.com/resources/documentation-unity?version=2.01&page=examples-ti
 */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using FMODUnity;
 using UnityEngine;
@@ -21,6 +23,7 @@ public class MusicManager : MonoBehaviour {
     
     public static MusicManager instance;
     private PlayerInput input;
+    private FishHandler fish;
 
     [SerializeField]
     [EventRef]
@@ -30,42 +33,93 @@ public class MusicManager : MonoBehaviour {
     private FMOD.Studio.EventInstance musicInstance;
     private FMOD.Studio.EVENT_CALLBACK beatCallback;
     public TimelineInfo timelineInfo = null;
-    private GCHandle timelineHandle;
+    private GCHandle timelineHandle; 
 
-    // For updating current marker info in PlayerInput
     private MarkerInfo markerInfo;
+    private string currentMarker;
     public TextAsset markerInfoJSON; //where is FMOD's full marker info stored?
-    private int currentMarkerNum = 0;
+    private int inputMarkerNum = 0;
+    private int fishMarkerNum = 0;
+
+    private List<Marker> Fish;
+    private List<Marker> Notes;
 
     #region Marker Info
+    
+
+    [Serializable]
+    public class Marker { public String name; public float position; }
+    
     // class for extracting all marker data from MarkerInfo.json
     [Serializable]
-    public class MarkerInfo {
-        [Serializable]
-        public class Marker { public String name; public float position; }
-
-        public Marker[] markers;
-    }
+    public class MarkerInfo { public Marker[] markers; }
 
     void InitMarkers() {
         Debug.Log("Reading JSON...");
         string json = markerInfoJSON.text;
         markerInfo = JsonUtility.FromJson<MarkerInfo>(json);
-        input.prevMarkerPos = 0;
-        Debug.Log("Start: " + input.prevMarkerPos);
-        input.nextMarkerPos = (int) (markerInfo.markers[0].position * 1000);
+
+        Fish = new List<Marker>();
+        Notes = new List<Marker>();
+
+        foreach (Marker x in markerInfo.markers) {
+            if (x.name == "Hit")
+                Notes.Add(x);
+            else if (x.name != "Advance")
+                Fish.Add(x);
+        }
+
+        input.prevMarkerPos = -500;
+        fish.prevMarkerPos = -500;
+        input.nextMarkerPos = (int) (Notes[0].position * 1000);
+        fish.nextMarkerName = Fish[0].name;
+        fish.nextMarkerPos = (int) (Fish[0].position * 1000);
+        input.nextnextMarkerPos = (int) (Notes[1].position * 1000);
+        fish.nextnextMarkerName = Fish[1].name;
+
+        fish.InitFish();
     }
 
     // Advance position in the markers array when a marker is passed
-    void UpdateMarkers() {
-        input.prevMarkerPos = (int) (markerInfo.markers[currentMarkerNum].position * 1000);
-        Debug.Log(markerInfo.markers[currentMarkerNum].name + ": " + input.prevMarkerPos);
-        input.nextMarkerPos = (int) (markerInfo.markers[currentMarkerNum + 1].position * 1000);
-        ++currentMarkerNum;
+    void UpdateInputMarkers() {
+        input.prevMarkerPos = input.nextMarkerPos;
+        //if (Notes.Count > inputMarkerNum)
+            //Debug.Log(Notes[inputMarkerNum].name + ": " + input.prevMarkerPos);
+        input.nextMarkerPos = input.nextnextMarkerPos;
+
+        if (Notes.Count > inputMarkerNum + 2) {
+            input.nextnextMarkerPos = (int) (Notes[inputMarkerNum + 2].position * 1000);
+        } else {
+            input.nextnextMarkerPos = 99999999; //so far away it'll never be hit
+        }
+
+        ++inputMarkerNum;
+    }
+
+    void UpdateFishMarkers() {
+        Debug.Log("hey");
+        fish.prevMarkerPos = fish.nextMarkerPos;
+        if (Fish.Count > fishMarkerNum + 1)
+            fish.nextMarkerPos = (int) (Fish[fishMarkerNum + 1].position * 1000);
+        else
+            fish.nextMarkerPos = 99999999;
+
+        fish.prevMarkerName = fish.nextMarkerName;
+        //Debug.Log(fish.prevMarkerName);
+        fish.nextMarkerName = fish.nextnextMarkerName;
+
+        Debug.Log(Fish.Count);
+        if (Fish.Count > fishMarkerNum + 2) {
+            fish.nextnextMarkerName = Fish[fishMarkerNum + 2].name;
+        } else {
+            fish.nextnextMarkerName = "End";
+        }
+
+        ++fishMarkerNum;
     }
     #endregion
     
-    #region FMOD Callback
+    #region FMOD Callback and Timeline Info
     // class for grabbing the most recent timeline data
     // Variables that are modified in the callback need to be part of a seperate class.
     // This class needs to be 'blittable' otherwise it can't be pinned in memory.
@@ -143,14 +197,17 @@ public class MusicManager : MonoBehaviour {
         if (music != null) {
             musicInstance = RuntimeManager.CreateInstance(music);
             musicInstance.start();
-
-            input = PlayerInput.instance;
-            input.musicInstance = musicInstance;
         }
     }
 
     // executes later than Awake()
     private void Start() {
+        // grab instances of other scripts
+        input = PlayerInput.instance;
+        input.musicInstance = musicInstance;
+        fish = FishHandler.instance;
+
+        // if music exists, init data structures
         if (music != null) {
             InitTimelineInfo();
             InitMarkers();
@@ -159,9 +216,15 @@ public class MusicManager : MonoBehaviour {
 
     // called every frame
     void Update() {
-        if (input.prevMarkerPos < timelineInfo.markerPos) {
-            UpdateMarkers();
-        }
+        if (input.nextMarkerPos <= timelineInfo.markerPos)
+            UpdateInputMarkers();
+        if (fish.nextMarkerPos == timelineInfo.markerPos)
+            UpdateFishMarkers();
+        if (currentMarker != timelineInfo.lastMarker) {
+            currentMarker = timelineInfo.lastMarker;
+            if (timelineInfo.lastMarker == "Advance")
+                fish.AdvanceFish();
+        }  
     }
 
     // Stop music when object is destroyed

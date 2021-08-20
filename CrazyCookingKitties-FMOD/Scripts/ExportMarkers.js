@@ -23,6 +23,7 @@ function ExportMarkers(success) {
                 if (events[x].markerTracks[y].markers[z].name && events[x].markerTracks[y].markers[z].position){
                     var mark = {name: events[x].markerTracks[y].markers[z].name, 
                                 position: events[x].markerTracks[y].markers[z].position};
+                    //events[x].markerTracks[y].markers[z].dump();
                     markerInfo.markers.push(mark);
                 }
             }

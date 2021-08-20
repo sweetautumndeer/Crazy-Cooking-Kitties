@@ -15,7 +15,7 @@ MonoBehaviour:
   Path: CrazyCookingKitties-FMOD/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 637649122955411626
+  lastModified: 637650018804640075
   LoadResult: 0
   FileSizes: []
   Exists: 1
@@ -41,7 +41,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 0
   MaxDistance: 0
-  Length: 228623
+  Length: 28656
 --- !u!114 &-3921779447792592237
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57,7 +57,7 @@ MonoBehaviour:
   Path: CrazyCookingKitties-FMOD/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 637649122955431643
+  lastModified: 637650018804650076
   LoadResult: 0
   FileSizes:
   - Name: Desktop
@@ -85,5 +85,5 @@ MonoBehaviour:
   - {fileID: -5659677912877489523}
   StringsBanks:
   - {fileID: -3921779447792592237}
-  stringsBankWriteTime: 637649122955431643
+  stringsBankWriteTime: 637650018804650076
   cacheVersion: 6
