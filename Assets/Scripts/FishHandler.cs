@@ -15,11 +15,7 @@ public class FishHandler : MonoBehaviour {
 
     public static FishHandler instance;
 
-    [HideInInspector] public string prevMarkerName = "";
-    [HideInInspector] public int prevMarkerPos = 0;
-    [HideInInspector] public string nextMarkerName = "";
     [HideInInspector] public int nextMarkerPos = 0;
-    [HideInInspector] public string nextnextMarkerName = "";
 
     // fish types
     public Transform smallFish;
@@ -103,11 +99,11 @@ public class FishHandler : MonoBehaviour {
         }
     }
 
-    public void InitFish(string direction) {
+    public void InitFish(string nextMarkerName, string direction) {
         ParseNextFishType(nextMarkerName, direction);
     }
 
-    public void AdvanceFish(string direction) {
+    public void AdvanceFish(string nextnextMarkerName, string direction) {
         timeElapsed = 0;
         if (leavingFish != null)
             Destroy(leavingFish.fish.gameObject);
@@ -119,19 +115,13 @@ public class FishHandler : MonoBehaviour {
     void ParseNextFishType(string markerName, string direction) {
         switch (markerName) {
             case "Long Fish":
-                {
                 spawningFish = new Fish(longFish, direction);
-                }
                 break;
             case "Medium Fish":
-                {
                 spawningFish = new Fish(mediumFish, direction);
-                }
                 break;
             case "Small Fish":
-                {
                 spawningFish = new Fish(smallFish, direction);
-                }
                 break;
             case "End":
                 spawningFish = null;

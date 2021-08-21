@@ -589,15 +589,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5da69e90562eb8e42a984f0e7d54a762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitWindow: 100
+  hitWindow: 200
   offset: 50
-  missWindow: 1500
-  currentNote: 0
-  lastNote: 0
+  missWindow: 2000
   keyPos: 0
-  prevMarkerPos: 0
-  nextMarkerPos: 0
-  nextnextMarkerPos: 0
   targetMarkerPos: 0
 --- !u!114 &2092394541
 MonoBehaviour:
@@ -611,11 +606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3b98a2cc3855f2488127ce0cbbb54da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prevMarkerName: 
-  prevMarkerPos: 0
-  nextMarkerName: 
   nextMarkerPos: 0
-  nextnextMarkerName: 
   smallFish: {fileID: 1085722544313714821, guid: 00f15d921a2845048b461ed2736cf4b8, type: 3}
   mediumFish: {fileID: 2451503106343519238, guid: a301209d931e86543b653e21932e6283, type: 3}
   longFish: {fileID: 7876710865128261389, guid: 526f7aaf5d7a94b448411c797be091ec, type: 3}

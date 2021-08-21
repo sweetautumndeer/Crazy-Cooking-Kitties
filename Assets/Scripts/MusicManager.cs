@@ -64,6 +64,7 @@ public class MusicManager : MonoBehaviour {
         Notes = new List<Marker>();
         directions = new List<string>();
 
+        //sort markers into the above lists for parsing
         foreach (Marker x in markerInfo.markers) {
             if (x.name == "Hit")
                 Notes.Add(x);
@@ -73,49 +74,28 @@ public class MusicManager : MonoBehaviour {
                 Fish.Add(x);
         }
 
-        input.prevMarkerPos = -500;
-        fish.prevMarkerPos = -500;
-        input.nextMarkerPos = (int) (Notes[0].position * 1000);
-        fish.nextMarkerName = Fish[0].name;
-        fish.nextMarkerPos = (int) (Fish[0].position * 1000);
-        input.nextnextMarkerPos = (int) (Notes[1].position * 1000);
-        fish.nextnextMarkerName = Fish[1].name;
-
-        fish.InitFish(directions[0]);
+        IncrementInputMarkers();
+        IncrementFishMarkers();
+        fish.InitFish(Fish[0].name, directions[0]);
     }
 
     // Advance position in the Notes array when a "Hit" marker is passed
-    public void UpdateInputMarkers() {
-        input.prevMarkerPos = input.nextMarkerPos;
-        input.nextMarkerPos = input.nextnextMarkerPos;
-
-        if (Notes.Count > inputMarkerNum + 2) {
-            input.nextnextMarkerPos = (int) (Notes[inputMarkerNum + 2].position * 1000);
+    public void IncrementInputMarkers() {
+        if (Notes.Count > inputMarkerNum) {
+            input.targetMarkerPos = (int) (Notes[inputMarkerNum].position * 1000);
         } else {
-            input.nextnextMarkerPos = 99999999; //so far away it'll never be hit
+            input.targetMarkerPos = 99999999; //so far away it'll never be hit
         }
 
-        ++input.currentNote;
         ++inputMarkerNum;
     }
 
     // Advance position in the Fish array
-    void UpdateFishMarkers() {
-        fish.prevMarkerPos = fish.nextMarkerPos;
-        if (Fish.Count > fishMarkerNum + 1)
-            fish.nextMarkerPos = (int) (Fish[fishMarkerNum + 1].position * 1000);
-        else
+    void IncrementFishMarkers() {
+        if (Fish.Count > fishMarkerNum) {
+            fish.nextMarkerPos = (int) (Fish[fishMarkerNum].position * 1000);
+        } else
             fish.nextMarkerPos = 99999999;
-
-        fish.prevMarkerName = fish.nextMarkerName;
-        //Debug.Log(fish.prevMarkerName);
-        fish.nextMarkerName = fish.nextnextMarkerName;
-
-        if (Fish.Count > fishMarkerNum + 2) {
-            fish.nextnextMarkerName = Fish[fishMarkerNum + 2].name;
-        } else {
-            fish.nextnextMarkerName = "End";
-        }
 
         ++fishMarkerNum;
     }
@@ -218,17 +198,17 @@ public class MusicManager : MonoBehaviour {
 
     // called every frame
     void Update() {
-        if (input.nextMarkerPos <= timelineInfo.markerPos)
-            UpdateInputMarkers();
         if (fish.nextMarkerPos == timelineInfo.markerPos)
-            UpdateFishMarkers();
+            IncrementFishMarkers();
+
         if (currentMarker != timelineInfo.lastMarker) {
             currentMarker = timelineInfo.lastMarker;
+
             if (timelineInfo.lastMarker == "Advance") {
-                if (directions.Count > fishMarkerNum + 1)
-                    fish.AdvanceFish(directions[fishMarkerNum + 1]);
+                if (directions.Count > fishMarkerNum)
+                    fish.AdvanceFish(Fish[fishMarkerNum].name, directions[fishMarkerNum]);
                 else
-                    fish.AdvanceFish("top");
+                    fish.AdvanceFish("End", "top");
             }
         }  
     }
