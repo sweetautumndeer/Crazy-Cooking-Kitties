@@ -85,7 +85,7 @@ public class MusicManager : MonoBehaviour {
     }
 
     // Advance position in the Notes array when a "Hit" marker is passed
-    void UpdateInputMarkers() {
+    public void UpdateInputMarkers() {
         input.prevMarkerPos = input.nextMarkerPos;
         input.nextMarkerPos = input.nextnextMarkerPos;
 

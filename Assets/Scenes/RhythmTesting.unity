@@ -589,13 +589,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5da69e90562eb8e42a984f0e7d54a762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitWindow: 200
-  hitOffset: 50
+  hitWindow: 100
+  offset: 50
+  missWindow: 1500
+  currentNote: 0
+  lastNote: 0
   keyPos: 0
-  missed: 0
   prevMarkerPos: 0
   nextMarkerPos: 0
   nextnextMarkerPos: 0
+  targetMarkerPos: 0
 --- !u!114 &2092394541
 MonoBehaviour:
   m_ObjectHideFlags: 0
