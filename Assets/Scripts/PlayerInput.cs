@@ -76,8 +76,8 @@ public class PlayerInput : MonoBehaviour {
         //Player Input
         if (Input.GetKeyDown("space"))
             RhythmCheck();
-        //if past hit window of the current note
-        if (keyPos > targetMarkerPos + hitWindow + offset)
+        // if reasonably past hit window of the current note (to avoid players hitting near this point and missing two notes at once)
+        if (keyPos > targetMarkerPos + hitWindow + 3 * offset)
             Miss();
     }
     #endregion
