@@ -132,11 +132,13 @@ public class FishHandler : MonoBehaviour {
     public void HitFish() {
         Transform slice = currentFish.fish.GetChild(currentFish.state++);
         slice.GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
+        slice.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
     }
 
     public void MissFish() {
         Transform slice = currentFish.fish.GetChild(currentFish.state++);
         slice.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+        slice.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
     }
     #endregion
 

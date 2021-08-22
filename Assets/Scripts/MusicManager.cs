@@ -46,6 +46,10 @@ public class MusicManager : MonoBehaviour {
     private List<Marker> Notes;     // notes that the player must hit during gameplay
     private int inputMarkerNum = 0; // position in Notes List
 
+    private PlayerInput down;
+    private PlayerInput right;
+    private PlayerInput left;
+    private PlayerInput up;
 
     #region Marker Info
     [Serializable]
@@ -175,6 +179,11 @@ public class MusicManager : MonoBehaviour {
     // Play music on startup, if music exists
     private void Awake() {
         instance = this;
+
+        down = new PlayerInput("ArrowDown");
+        right = new PlayerInput("ArrowRight");
+        left = new PlayerInput("ArrowLeft");
+        up = new PlayerInput("ArrowUp");
 
         if (music != null) {
             musicInstance = RuntimeManager.CreateInstance(music);

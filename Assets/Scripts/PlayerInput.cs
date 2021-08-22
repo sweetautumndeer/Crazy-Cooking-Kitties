@@ -18,6 +18,8 @@ public class PlayerInput : MonoBehaviour {
     private MusicManager music;
     public FMOD.Studio.EventInstance musicInstance; // initialized in MusicManager.cs
 
+    private string keystroke;
+
     // Defines window for hitting a note
     public int hitWindow = 100;
     public int offset = 50;
@@ -26,6 +28,10 @@ public class PlayerInput : MonoBehaviour {
     //for proximity comparisons in RhythmCheck()
     [HideInInspector] public int keyPos = 0;      // time when key was pressed in ms
     [HideInInspector] public int targetMarkerPos; // time of the next marker in ms
+
+    public PlayerInput(string keystroke) {
+        this.keystroke = keystroke;
+    }
 
     #region Rhythm Functions
     // Check wether input is close to an FMOD "Hit" Marker
