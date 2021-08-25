@@ -201,7 +201,7 @@
 			<value>2.4554051137696455</value>
 		</property>
 		<property name="name">
-			<value>Hit</value>
+			<value>D</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{1ca368c1-5798-4a7d-802c-b007d92a5667}</destination>
@@ -215,7 +215,7 @@
 			<value>6.044776119402985</value>
 		</property>
 		<property name="name">
-			<value>Hit</value>
+			<value>R</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{1ca368c1-5798-4a7d-802c-b007d92a5667}</destination>
@@ -229,7 +229,7 @@
 			<value>9.6268656716417915</value>
 		</property>
 		<property name="name">
-			<value>Hit</value>
+			<value>U</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{1ca368c1-5798-4a7d-802c-b007d92a5667}</destination>
@@ -243,7 +243,7 @@
 			<value>6.7164179104477615</value>
 		</property>
 		<property name="name">
-			<value>Hit</value>
+			<value>R</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{1ca368c1-5798-4a7d-802c-b007d92a5667}</destination>
@@ -271,7 +271,7 @@
 			<value>13.208955223880599</value>
 		</property>
 		<property name="name">
-			<value>Hit</value>
+			<value>L</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{1ca368c1-5798-4a7d-802c-b007d92a5667}</destination>
@@ -285,7 +285,7 @@
 			<value>13.880597014925376</value>
 		</property>
 		<property name="name">
-			<value>Hit</value>
+			<value>L</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{1ca368c1-5798-4a7d-802c-b007d92a5667}</destination>
@@ -313,7 +313,7 @@
 			<value>1.791044776119403</value>
 		</property>
 		<property name="name">
-			<value>Hit</value>
+			<value>D</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{1ca368c1-5798-4a7d-802c-b007d92a5667}</destination>
@@ -355,7 +355,7 @@
 			<value>5.3731343283582094</value>
 		</property>
 		<property name="name">
-			<value>Hit</value>
+			<value>R</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{1ca368c1-5798-4a7d-802c-b007d92a5667}</destination>
@@ -369,7 +369,7 @@
 			<value>8.9552238805970159</value>
 		</property>
 		<property name="name">
-			<value>Hit</value>
+			<value>U</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{1ca368c1-5798-4a7d-802c-b007d92a5667}</destination>
@@ -383,7 +383,7 @@
 			<value>12.537313432835822</value>
 		</property>
 		<property name="name">
-			<value>Hit</value>
+			<value>L</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{1ca368c1-5798-4a7d-802c-b007d92a5667}</destination>

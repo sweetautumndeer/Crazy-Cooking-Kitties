@@ -41,15 +41,14 @@ public class MusicManager : MonoBehaviour {
     private string currentMarker;
 
     private List<Marker> Fish;      // defines upcoming fish
-    private List<string> directions;
     private int fishMarkerNum = 0;  // position in Fish list
-    private List<Marker> Notes;     // notes that the player must hit during gameplay
-    private int inputMarkerNum = 0; // position in Notes List
+    private List<string> directions;// direction that each fish comes from
+    
+    private MarkerList down;
+    private MarkerList right;
+    private MarkerList left;
+    private MarkerList up;
 
-    private PlayerInput down;
-    private PlayerInput right;
-    private PlayerInput left;
-    private PlayerInput up;
 
     #region Marker Info
     [Serializable]
@@ -59,39 +58,88 @@ public class MusicManager : MonoBehaviour {
     [Serializable]
     public class MarkerInfo { public Marker[] markers; }
 
+    public class MarkerList {
+        public List<Marker> notes;
+        public int pos = 0;
+
+        public MarkerList() {
+            notes = new List<Marker>();
+        }
+
+        public void AddMarker(Marker x) {
+            notes.Add(x);
+        }
+
+        public int Increment() {
+            int result;
+
+            if (notes.Count > pos) {
+                result = (int) (notes[pos].position * 1000);
+            } else {
+                result = 99999999; //so far away it'll never be hit
+            }
+
+            ++pos;
+            return result;
+        }
+    }
+
     void InitMarkers() {
         Debug.Log("Reading JSON...");
         string json = markerInfoJSON.text;
         markerInfo = JsonUtility.FromJson<MarkerInfo>(json);
 
         Fish = new List<Marker>();
-        Notes = new List<Marker>();
+        down = new MarkerList();
+        right = new MarkerList();
+        left = new MarkerList();
+        up = new MarkerList();
         directions = new List<string>();
 
         //sort markers into the above lists for parsing
         foreach (Marker x in markerInfo.markers) {
-            if (x.name == "Hit")
-                Notes.Add(x);
+            if (x.name == "D")
+                down.AddMarker(x);
+            else if (x.name == "R")
+                right.AddMarker(x);
+            else if (x.name == "L")
+                left.AddMarker(x);
+            else if (x.name == "U")
+                up.AddMarker(x);
             else if (x.name == "Top" || x.name == "Left" || x.name == "Right" || x.name == "Bottom")
                 directions.Add(x.name);
             else if (x.name != "Advance")
                 Fish.Add(x);
         }
 
-        IncrementInputMarkers();
+        IncrementInputMarkers("Down");
+        IncrementInputMarkers("Right");
+        IncrementInputMarkers("Left");
+        IncrementInputMarkers("Up");
         IncrementFishMarkers();
         fish.InitFish(Fish[0].name, directions[0]);
     }
 
     // Advance position in the Notes array when a "Hit" marker is passed
-    public void IncrementInputMarkers() {
-        if (Notes.Count > inputMarkerNum) {
-            input.targetMarkerPos = (int) (Notes[inputMarkerNum].position * 1000);
-        } else {
-            input.targetMarkerPos = 99999999; //so far away it'll never be hit
+    public void IncrementInputMarkers(string pos) {
+        switch(pos){
+            case "Down":
+                input.downTargetPos = down.Increment();
+                break;
+            case "Right":
+                input.rightTargetPos = right.Increment();
+                break;
+            case "Left":
+                input.leftTargetPos = left.Increment();
+                break;
+            case "Up":
+                input.upTargetPos = up.Increment();
+                break;
+            default:
+                Debug.Log("Invalid Increment Input!");
+                break;
         }
-
-        ++inputMarkerNum;
+        
     }
 
     // Advance position in the Fish array
@@ -179,11 +227,6 @@ public class MusicManager : MonoBehaviour {
     // Play music on startup, if music exists
     private void Awake() {
         instance = this;
-
-        down = new PlayerInput("ArrowDown");
-        right = new PlayerInput("ArrowRight");
-        left = new PlayerInput("ArrowLeft");
-        up = new PlayerInput("ArrowUp");
 
         if (music != null) {
             musicInstance = RuntimeManager.CreateInstance(music);

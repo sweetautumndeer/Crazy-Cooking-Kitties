@@ -27,38 +27,37 @@ public class PlayerInput : MonoBehaviour {
 
     //for proximity comparisons in RhythmCheck()
     [HideInInspector] public int keyPos = 0;      // time when key was pressed in ms
-    [HideInInspector] public int targetMarkerPos; // time of the next marker in ms
-
-    public PlayerInput(string keystroke) {
-        this.keystroke = keystroke;
-    }
+    [HideInInspector] public int downTargetPos;
+    [HideInInspector] public int rightTargetPos;
+    [HideInInspector] public int leftTargetPos;
+    [HideInInspector] public int upTargetPos;
 
     #region Rhythm Functions
     // Check wether input is close to an FMOD "Hit" Marker
-    void RhythmCheck() {
+    void RhythmCheck(int target, string direction) {
         // Calculate proximity to nearest marker
-        int diff = keyPos - targetMarkerPos;
+        int diff = keyPos - target;
         Debug.Log("Proximity to Marker: " + diff);
 
         // If within the hit window, the note was hit
         if (diff > 0 - hitWindow + offset && diff < hitWindow + offset) {
-            Hit();
+            Hit(direction);
         } else if (diff > 0 - missWindow + offset && diff < hitWindow + offset) {
-            Miss();
+            Miss(direction);
         }
     }
 
     // Send hit/miss message to FishHandler
     // Mark current note as having been interacted with
-    void Hit() {
+    void Hit(string direction) {
         Debug.Log("Hit! :>");
         fish.HitFish();
-        music.IncrementInputMarkers();
+        music.IncrementInputMarkers(direction);
     }
-    void Miss() {
+    void Miss(string direction) {
         Debug.Log("Miss :<");
         fish.MissFish();
-        music.IncrementInputMarkers();
+        music.IncrementInputMarkers(direction);
     }
     #endregion
 
@@ -80,11 +79,23 @@ public class PlayerInput : MonoBehaviour {
         musicInstance.getTimelinePosition(out keyPos);
 
         //Player Input
-        if (Input.GetKeyDown("space"))
-            RhythmCheck();
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+            RhythmCheck(downTargetPos, "Down");
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+            RhythmCheck(rightTargetPos, "Right");
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+            RhythmCheck(leftTargetPos, "Left");
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+            RhythmCheck(upTargetPos, "Up");
         // if reasonably past hit window of the current note (to avoid players hitting near this point and missing two notes at once)
-        if (keyPos > targetMarkerPos + hitWindow + 3 * offset)
-            Miss();
+        if (keyPos > downTargetPos + hitWindow + 3 * offset)
+            Miss("Down");
+        if (keyPos > rightTargetPos + hitWindow + 3 * offset)
+            Miss("Right");
+        if (keyPos > leftTargetPos + hitWindow + 3 * offset)
+            Miss("Left");
+        if (keyPos > upTargetPos + hitWindow + 3 * offset)
+            Miss("Up");
     }
     #endregion
 }
