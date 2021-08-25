@@ -31,6 +31,7 @@ public class PlayerInput : MonoBehaviour {
     [HideInInspector] public int rightTargetPos;
     [HideInInspector] public int leftTargetPos;
     [HideInInspector] public int upTargetPos;
+    private int nextMarker;
 
     #region Rhythm Functions
     // Check wether input is close to an FMOD "Hit" Marker

@@ -117,7 +117,7 @@ public class MusicManager : MonoBehaviour {
         IncrementInputMarkers("Left");
         IncrementInputMarkers("Up");
         IncrementFishMarkers();
-        fish.InitFish(Fish[0].name, directions[0]);
+        fish.InitFish(Fish[0].name, directions[0], (int) (Fish[0].position * 1000));
     }
 
     // Advance position in the Notes array when a "Hit" marker is passed
@@ -240,6 +240,7 @@ public class MusicManager : MonoBehaviour {
         input = PlayerInput.instance;
         input.musicInstance = musicInstance;
         fish = FishHandler.instance;
+        fish.musicInstance = musicInstance;
 
         // if music exists, init data structures
         if (music != null) {
@@ -258,9 +259,9 @@ public class MusicManager : MonoBehaviour {
 
             if (timelineInfo.lastMarker == "Advance") {
                 if (directions.Count > fishMarkerNum)
-                    fish.AdvanceFish(Fish[fishMarkerNum].name, directions[fishMarkerNum]);
+                    fish.AdvanceFish(Fish[fishMarkerNum].name, directions[fishMarkerNum], (int) (Fish[fishMarkerNum].position * 1000));
                 else
-                    fish.AdvanceFish("End", "top");
+                    fish.AdvanceFish("End", "top", 0);
             }
         }  
     }

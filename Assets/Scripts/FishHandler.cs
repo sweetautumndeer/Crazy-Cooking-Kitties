@@ -14,6 +14,8 @@ using UnityEngine;
 public class FishHandler : MonoBehaviour {
 
     public static FishHandler instance;
+    public PlayerInput input;
+    public FMOD.Studio.EventInstance musicInstance; // initialized in MusicManager.cs
 
     [HideInInspector] public int nextMarkerPos = 0;
 
@@ -40,6 +42,10 @@ public class FishHandler : MonoBehaviour {
 
     private static float timeElapsed = 0;
     private static float lerpDuration = 1;
+    
+    private int keyPos;
+    private static float bps = 134/60f;
+    private static float unitsPerSec = (float) .4/1.5f * bps;
 
     #region Fish Class and Functions
     private class Fish {
@@ -47,12 +53,14 @@ public class FishHandler : MonoBehaviour {
         public Transform spawnLocation;
         public Transform midLocation;
         public Transform endLocation;
-        public int state = 0;
+        public int state = 1;
+        public int markerPos;
         public string startingPos;
 
-        public Fish(Transform fish, string startingPos) {
+        public Fish(Transform fish, string startingPos, int pos) {
             Quaternion rotation = Quaternion.identity;
             this.startingPos = startingPos;
+            this.markerPos = pos;
 
             switch (startingPos) {
                 case "Top":
@@ -84,44 +92,51 @@ public class FishHandler : MonoBehaviour {
             this.fish = MonoBehaviour.Instantiate(fish, spawnLocation.position, rotation);
         }
 
-        public void Spawn() { Animate(spawnLocation, midLocation); }
-        public void Center() { Animate(midLocation, center); }
-        public void Leave() { Animate(center, endLocation); }
+        public void Spawn() { Animate(fish, spawnLocation, midLocation, lerpDuration); }
+        public void Center() { Animate(fish, midLocation, center, lerpDuration); }
+        public void Leave() { Animate(fish, center, endLocation, lerpDuration); }
 
-        void Animate(Transform start, Transform end) {
-            if (timeElapsed < lerpDuration) {
-                float t = timeElapsed / lerpDuration;
+        void Animate(Transform obj, Transform start, Transform end, float duration) {
+            if (timeElapsed < duration) {
+                float t = timeElapsed / duration;
                 t = t * t * (3f - 2f * t);
-                fish.position = Vector2.Lerp(start.position, end.position, t);
+                obj.position = Vector2.Lerp(start.position, end.position, t);
             } else {
-                fish.position = end.position;
+                obj.position = end.position;
             }
         }
     }
 
-    public void InitFish(string nextMarkerName, string direction) {
-        ParseNextFishType(nextMarkerName, direction);
+    public void InitFish(string nextMarkerName, string direction, int pos) {
+        ParseNextFishType(nextMarkerName, direction, pos);
     }
 
-    public void AdvanceFish(string nextnextMarkerName, string direction) {
+    public void AdvanceFish(string nextnextMarkerName, string direction, int pos) {
         timeElapsed = 0;
         if (leavingFish != null)
             Destroy(leavingFish.fish.gameObject);
         leavingFish = currentFish;
         currentFish = spawningFish;
-        ParseNextFishType(nextnextMarkerName, direction);
+        ParseNextFishType(nextnextMarkerName, direction, pos);
     }
 
-    void ParseNextFishType(string markerName, string direction) {
+    void CalculateKnifePosition() {
+        musicInstance.getTimelinePosition(out keyPos);
+        float t = (keyPos - currentFish.markerPos) / 1000;
+        float result = -0.2f + t * unitsPerSec;
+        currentFish.fish.GetChild(0).position = (new Vector3(result, 0.0f, 0.0f) + currentFish.fish.position);
+    }
+
+    void ParseNextFishType(string markerName, string direction, int pos) {
         switch (markerName) {
             case "Long Fish":
-                spawningFish = new Fish(longFish, direction);
+                spawningFish = new Fish(longFish, direction, pos);
                 break;
             case "Medium Fish":
-                spawningFish = new Fish(mediumFish, direction);
+                spawningFish = new Fish(mediumFish, direction, pos);
                 break;
             case "Small Fish":
-                spawningFish = new Fish(smallFish, direction);
+                spawningFish = new Fish(smallFish, direction, pos);
                 break;
             case "End":
                 spawningFish = null;
@@ -159,12 +174,18 @@ public class FishHandler : MonoBehaviour {
         bottom = fishWaypoints.GetChild(8);
     }
 
+    void Start() {
+        input = PlayerInput.instance;
+    }
+
     // Update is called once per frame
     void Update() {
         if (spawningFish != null)
             spawningFish.Spawn();
-        if (currentFish != null)
+        if (currentFish != null) {
             currentFish.Center();
+            CalculateKnifePosition();
+        }
         if (leavingFish != null)
             leavingFish.Leave();
         timeElapsed += Time.deltaTime;
