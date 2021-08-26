@@ -30,6 +30,8 @@ public class MusicManager : MonoBehaviour {
     [EventRef]
     private string music = null;
 
+    public bool GUIEnabled;
+
     // FMOD Variables
     private FMOD.Studio.EventInstance musicInstance;
     private FMOD.Studio.EVENT_CALLBACK beatCallback;
@@ -62,13 +64,8 @@ public class MusicManager : MonoBehaviour {
         public List<Marker> notes;
         public int pos = 0;
 
-        public MarkerList() {
-            notes = new List<Marker>();
-        }
-
-        public void AddMarker(Marker x) {
-            notes.Add(x);
-        }
+        public MarkerList() { notes = new List<Marker>(); }
+        public void AddMarker(Marker x) { notes.Add(x); }
 
         public int Increment() {
             int result;
@@ -89,6 +86,7 @@ public class MusicManager : MonoBehaviour {
         string json = markerInfoJSON.text;
         markerInfo = JsonUtility.FromJson<MarkerInfo>(json);
 
+        // init lists
         Fish = new List<Marker>();
         down = new MarkerList();
         right = new MarkerList();
@@ -112,6 +110,7 @@ public class MusicManager : MonoBehaviour {
                 Fish.Add(x);
         }
 
+        // increment each list once to init them
         IncrementInputMarkers("Down");
         IncrementInputMarkers("Right");
         IncrementInputMarkers("Left");
@@ -226,7 +225,7 @@ public class MusicManager : MonoBehaviour {
     #region Unity Functions
     // Play music on startup, if music exists
     private void Awake() {
-        instance = this;
+        instance = this; // init MonoBehaviour instance
 
         if (music != null) {
             musicInstance = RuntimeManager.CreateInstance(music);
@@ -251,12 +250,15 @@ public class MusicManager : MonoBehaviour {
 
     // called every frame
     void Update() {
+        // if we have passed FishHandler's next marker, update it
         if (fish.nextMarkerPos == timelineInfo.markerPos)
             IncrementFishMarkers();
 
+        // This is true every time the last marker changes
         if (currentMarker != timelineInfo.lastMarker) {
             currentMarker = timelineInfo.lastMarker;
 
+            // if last marker was named Advance, then AdvanceFish()
             if (timelineInfo.lastMarker == "Advance") {
                 if (directions.Count > fishMarkerNum)
                     fish.AdvanceFish(Fish[fishMarkerNum].name, directions[fishMarkerNum], (int) (Fish[fishMarkerNum].position * 1000));
@@ -271,9 +273,10 @@ public class MusicManager : MonoBehaviour {
         FreeTimelineInfo();
     }
 
-    // GUI to display debug info
+    // GUI to display debug info (if enabled)
     void OnGUI() {
-        GUILayout.Box($"Current beat = {timelineInfo.currentBeat}, Current Bar = {timelineInfo.currentBar}, Last Marker = {(string)timelineInfo.lastMarker}");
+        if (GUIEnabled)
+            GUILayout.Box($"Current beat = {timelineInfo.currentBeat}, Current Bar = {timelineInfo.currentBar}, Last Marker = {(string)timelineInfo.lastMarker}");
     }
     #endregion
 }

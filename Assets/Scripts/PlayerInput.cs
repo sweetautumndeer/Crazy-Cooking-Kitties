@@ -21,9 +21,9 @@ public class PlayerInput : MonoBehaviour {
     private string keystroke;
 
     // Defines window for hitting a note
-    public int hitWindow = 100;
-    public int offset = 50;
-    public int missWindow = 3000;
+    public int hitWindow;
+    public int offset;
+    public int missWindow;
 
     //for proximity comparisons in RhythmCheck()
     [HideInInspector] public int keyPos = 0;      // time when key was pressed in ms

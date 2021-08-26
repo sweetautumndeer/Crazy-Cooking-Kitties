@@ -562,6 +562,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   music: event:/Music/Level1-1
+  GUIEnabled: 0
   markerInfoJSON: {fileID: 4900000, guid: c1576d5f2ca96e14e85067ba7249a298, type: 3}
 --- !u!4 &2092394539
 Transform:
@@ -589,11 +590,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5da69e90562eb8e42a984f0e7d54a762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitWindow: 200
-  offset: 50
+  hitWindow: 150
+  offset: 100
   missWindow: 2000
   keyPos: 0
-  targetMarkerPos: 0
+  downTargetPos: 0
+  rightTargetPos: 0
+  leftTargetPos: 0
+  upTargetPos: 0
 --- !u!114 &2092394541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -606,6 +610,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3b98a2cc3855f2488127ce0cbbb54da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  input: {fileID: 0}
   nextMarkerPos: 0
   smallFish: {fileID: 1085722544313714821, guid: 00f15d921a2845048b461ed2736cf4b8, type: 3}
   mediumFish: {fileID: 2451503106343519238, guid: a301209d931e86543b653e21932e6283, type: 3}
