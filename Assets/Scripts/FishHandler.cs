@@ -44,8 +44,7 @@ public class FishHandler : MonoBehaviour {
     private static float lerpDuration = 1;
     
     private int keyPos;
-    private static float bps = 134/60f;
-    private static float unitsPerSec = (float) .4/1.5f * bps;
+    private static float bpm = 134;
 
     #region Fish Class and Functions
     private class Fish {
@@ -53,7 +52,7 @@ public class FishHandler : MonoBehaviour {
         public Transform spawnLocation;
         public Transform midLocation;
         public Transform endLocation;
-        public int state = 1;
+        public int state = 0;
         public int markerPos;
         public string startingPos;
 
@@ -120,13 +119,6 @@ public class FishHandler : MonoBehaviour {
         ParseNextFishType(nextnextMarkerName, direction, pos);
     }
 
-    void CalculateKnifePosition() {
-        musicInstance.getTimelinePosition(out keyPos);
-        float t = (keyPos - currentFish.markerPos) / 1000;
-        float result = -0.2f + t * unitsPerSec;
-        currentFish.fish.GetChild(0).position = (new Vector3(result, 0.0f, 0.0f) + currentFish.fish.position);
-    }
-
     void ParseNextFishType(string markerName, string direction, int pos) {
         switch (markerName) {
             case "Long Fish":
@@ -144,14 +136,32 @@ public class FishHandler : MonoBehaviour {
         }
     }
 
+    void CalculateKnifePosition() {
+        musicInstance.getTimelinePosition(out keyPos); // current song position
+
+        float beatsPerSec = bpm / 60f;
+        float markerDistance = currentFish.fish.GetChild(3).position.x - currentFish.fish.GetChild(2).position.x; // distance between two markers on the fish
+        markerDistance = 0.8f;
+        float beatDistance = 1.5f; // beats between said two markers
+        float unitsPerSec =  markerDistance / beatDistance * beatsPerSec; // speed at which the knife should move
+
+        float t = (keyPos - currentFish.markerPos) - input.offset; // time to/until the first marker, with offset accounted for
+        float firstNote = currentFish.fish.GetChild(2).position.x; // x coor of the first marker
+        firstNote = -0.4f;
+        float unitsPerMS = unitsPerSec / 1000f; // changed to ms for finer movement
+
+        float result = firstNote + t * unitsPerMS; // full x position lerp with respect to song time
+        currentFish.fish.GetChild(1).position = (currentFish.fish.rotation * new Vector3(result, 0.75f, -2.0f) + currentFish.fish.position); // account for prefab rotation and position
+    }
+
     public void HitFish() {
-        Transform slice = currentFish.fish.GetChild(currentFish.state++);
+        Transform slice = currentFish.fish.GetChild(2 + currentFish.state++);
         slice.GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
         slice.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
     }
 
     public void MissFish() {
-        Transform slice = currentFish.fish.GetChild(currentFish.state++);
+        Transform slice = currentFish.fish.GetChild(2 + currentFish.state++);
         slice.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
         slice.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
     }
