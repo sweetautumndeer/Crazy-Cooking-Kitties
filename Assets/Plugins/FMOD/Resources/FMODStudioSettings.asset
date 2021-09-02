@@ -335,10 +335,10 @@ MonoBehaviour:
   SwitchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: ../CrazyCookingKitties-FMOD/CCK-FMOD.fspro
-  sourceBankPath: ../CrazyCookingKitties-FMOD/Build
+  sourceProjectPath: CrazyCookingKitties-FMOD/CCK-FMOD-Project.fspro
+  sourceBankPath: CrazyCookingKitties-FMOD/Build
   SourceBankPathUnformatted: 
-  BankRefreshCooldown: 5
+  BankRefreshCooldown: 1
   ShowBankRefreshWindow: 1
   AutomaticEventLoading: 1
   BankLoadType: 0
@@ -357,8 +357,10 @@ MonoBehaviour:
   VirtualChannelSettings: []
   RealChannelSettings: []
   Plugins: []
-  MasterBanks: []
-  Banks: []
+  MasterBanks:
+  - Master
+  Banks:
+  - Level1-1
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
