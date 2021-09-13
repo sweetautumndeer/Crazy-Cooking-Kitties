@@ -24,7 +24,7 @@ public class MusicManager : MonoBehaviour {
     // Script instances
     public static MusicManager instance;
     private PlayerInput input;
-    private FishHandler fish;
+    private RhythmVisuals visuals;
 
     [SerializeField]
     [EventRef]
@@ -33,7 +33,7 @@ public class MusicManager : MonoBehaviour {
     public bool GUIEnabled;
 
     // FMOD Variables
-    private FMOD.Studio.EventInstance musicInstance;
+    public FMOD.Studio.EventInstance musicInstance;
     private FMOD.Studio.EVENT_CALLBACK beatCallback;
     public TimelineInfo timelineInfo = null;
     private GCHandle timelineHandle; 
@@ -41,10 +41,6 @@ public class MusicManager : MonoBehaviour {
     private MarkerInfo markerInfo;   // class instance for dumping JSON info into
     public TextAsset markerInfoJSON; // where is FMOD's full marker info stored?
     private string currentMarker;
-
-    private List<Marker> Fish;      // defines upcoming fish
-    private int fishMarkerNum = 0;  // position in Fish list
-    private List<string> directions;// direction that each fish comes from
     
     private MarkerList down;
     private MarkerList right;
@@ -87,12 +83,10 @@ public class MusicManager : MonoBehaviour {
         markerInfo = JsonUtility.FromJson<MarkerInfo>(json);
 
         // init lists
-        Fish = new List<Marker>();
         down = new MarkerList();
         right = new MarkerList();
         left = new MarkerList();
         up = new MarkerList();
-        directions = new List<string>();
 
         //sort markers into the above lists for parsing
         foreach (Marker x in markerInfo.markers) {
@@ -104,10 +98,6 @@ public class MusicManager : MonoBehaviour {
                 left.AddMarker(x);
             else if (x.name == "U")
                 up.AddMarker(x);
-            else if (x.name == "Top" || x.name == "Left" || x.name == "Right" || x.name == "Bottom")
-                directions.Add(x.name);
-            else if (x.name != "Advance")
-                Fish.Add(x);
         }
 
         // increment each list once to init them
@@ -115,8 +105,7 @@ public class MusicManager : MonoBehaviour {
         IncrementInputMarkers("Right");
         IncrementInputMarkers("Left");
         IncrementInputMarkers("Up");
-        IncrementFishMarkers();
-        fish.InitFish(Fish[0].name, directions[0], (int) (Fish[0].position * 1000));
+        visuals.Init(markerInfo);
     }
 
     // Advance position in the Notes array when a "Hit" marker is passed
@@ -139,16 +128,6 @@ public class MusicManager : MonoBehaviour {
                 break;
         }
         
-    }
-
-    // Advance position in the Fish array
-    void IncrementFishMarkers() {
-        if (Fish.Count > fishMarkerNum) {
-            fish.nextMarkerPos = (int) (Fish[fishMarkerNum].position * 1000);
-        } else
-            fish.nextMarkerPos = 99999999;
-
-        ++fishMarkerNum;
     }
     #endregion
     
@@ -238,8 +217,8 @@ public class MusicManager : MonoBehaviour {
         // grab instances of other scripts
         input = PlayerInput.instance;
         input.musicInstance = musicInstance;
-        fish = FishHandler.instance;
-        fish.musicInstance = musicInstance;
+        visuals = FishHandler.instance;
+        //visuals.musicInstance = musicInstance;
 
         // if music exists, init data structures
         if (music != null) {
@@ -251,20 +230,20 @@ public class MusicManager : MonoBehaviour {
     // called every frame
     void Update() {
         // if we have passed FishHandler's next marker, update it
-        if (fish.nextMarkerPos == timelineInfo.markerPos)
-            IncrementFishMarkers();
+        if (visuals.nextMarkerPos == timelineInfo.markerPos)
+            visuals.IncrementMarkers();
 
         // This is true every time the last marker changes
         if (currentMarker != timelineInfo.lastMarker) {
             currentMarker = timelineInfo.lastMarker;
 
             // if last marker was named Advance, then AdvanceFish()
-            if (timelineInfo.lastMarker == "Advance") {
-                if (directions.Count > fishMarkerNum)
-                    fish.AdvanceFish(Fish[fishMarkerNum].name, directions[fishMarkerNum], (int) (Fish[fishMarkerNum].position * 1000));
-                else
-                    fish.AdvanceFish("End", "top", 0);
-            }
+            // if (timelineInfo.lastMarker == "Advance") {
+            //     if (directions.Count > fishMarkerNum)
+            //         visuals.AdvanceFish(Fish[fishMarkerNum].name, directions[fishMarkerNum], (int) (Fish[fishMarkerNum].position * 1000));
+            //     else
+            //         visuals.AdvanceFish("End", "top", 0);
+            // }
         }  
     }
 

@@ -614,5 +614,5 @@ MonoBehaviour:
   nextMarkerPos: 0
   smallFish: {fileID: 1085722544313714821, guid: 00f15d921a2845048b461ed2736cf4b8, type: 3}
   mediumFish: {fileID: 2451503106343519238, guid: a301209d931e86543b653e21932e6283, type: 3}
-  longFish: {fileID: 7876710865128261389, guid: 526f7aaf5d7a94b448411c797be091ec, type: 3}
+  longFish: {fileID: 326495550728449186, guid: 526f7aaf5d7a94b448411c797be091ec, type: 3}
   fishWaypoints: {fileID: 1415462408}
