@@ -14,7 +14,7 @@ public class PlayerInput : MonoBehaviour {
 
     // Class instances
     public static PlayerInput instance;
-    private FishHandler fish;
+    private RhythmVisuals visuals;
     private MusicManager music;
     public FMOD.Studio.EventInstance musicInstance; // initialized in MusicManager.cs
 
@@ -52,12 +52,12 @@ public class PlayerInput : MonoBehaviour {
     // Mark current note as having been interacted with
     void Hit(string direction) {
         Debug.Log("Hit! :>");
-        fish.HitFish();
+        visuals.Hit();
         music.IncrementInputMarkers(direction);
     }
     void Miss(string direction) {
         Debug.Log("Miss :<");
-        fish.MissFish();
+        visuals.Miss();
         music.IncrementInputMarkers(direction);
     }
     #endregion
@@ -70,7 +70,7 @@ public class PlayerInput : MonoBehaviour {
 
     // grab other script instances
     void Start() {
-        fish = FishHandler.instance;
+        visuals = FishHandler.instance;
         music = MusicManager.instance;
     }
 
