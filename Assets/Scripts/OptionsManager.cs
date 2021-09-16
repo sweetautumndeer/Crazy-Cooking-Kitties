@@ -23,12 +23,27 @@ public class OptionsManager : MonoBehaviour {
         musicVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Music");
         sfxVCA = FMODUnity.RuntimeManager.GetVCA("vca:/SFX");
         ambientVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Ambient");
+        master = FMODUnity.RuntimeManager.GetBus("bus:/");
     }
 
     public void AdjustMusicVolume() {
         musicVolume = musicSlider.value;
-        float result = Mathf.Pow(10f, musicVolume / 20f);
+        //float result = Mathf.Pow(10f, musicVolume / 20f);
         musicVCA.setVolume(musicVolume);
-        Debug.Log(musicVolume);
+    }
+    public void AdjustSFXVolume() {
+        sfxVolume = sfxSlider.value;
+        //float result = Mathf.Pow(10f, musicVolume / 20f);
+        sfxVCA.setVolume(sfxVolume);
+    }
+    public void AdjustAmbientVolume() {
+        ambientVolume = ambientSlider.value;
+        //float result = Mathf.Pow(10f, musicVolume / 20f);
+        ambientVCA.setVolume(ambientVolume);
+    }
+    public void AdjustMaster() {
+        masterVolume = masterSlider.value;
+        //float result = Mathf.Pow(10f, musicVolume / 20f);
+        master.setVolume(masterVolume);
     }
 }

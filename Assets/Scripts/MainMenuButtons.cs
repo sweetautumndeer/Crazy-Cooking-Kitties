@@ -32,7 +32,7 @@ public class MainMenuButtons : MonoBehaviour {
     }
 
     public void LoadLevel1() {
-        SceneManager.LoadScene("RhythmTesting");
+        SceneManager.LoadScene("Level1");
     }
     #endregion
 

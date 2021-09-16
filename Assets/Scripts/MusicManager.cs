@@ -47,6 +47,9 @@ public class MusicManager : MonoBehaviour {
     private MarkerList left;
     private MarkerList up;
 
+    public int musicEnd;
+    public RectTransform songSliderBG;
+    public RectTransform songSlider;
 
     #region Marker Info
     [Serializable]
@@ -236,15 +239,15 @@ public class MusicManager : MonoBehaviour {
         // This is true every time the last marker changes
         if (currentMarker != timelineInfo.lastMarker) {
             currentMarker = timelineInfo.lastMarker;
-
-            // if last marker was named Advance, then AdvanceFish()
-            // if (timelineInfo.lastMarker == "Advance") {
-            //     if (directions.Count > fishMarkerNum)
-            //         visuals.AdvanceFish(Fish[fishMarkerNum].name, directions[fishMarkerNum], (int) (Fish[fishMarkerNum].position * 1000));
-            //     else
-            //         visuals.AdvanceFish("End", "top", 0);
-            // }
         }  
+
+        CalculateSongPercentageSlider();
+    }
+
+    private void CalculateSongPercentageSlider() {
+        float songPercentage = ((float) input.keyPos / (float) musicEnd);
+        if (songPercentage > 1) { songPercentage = 1; }
+        songSlider.sizeDelta = new Vector2(songPercentage * songSliderBG.sizeDelta.x, songSliderBG.sizeDelta.y);
     }
 
     // Stop music when object is destroyed
