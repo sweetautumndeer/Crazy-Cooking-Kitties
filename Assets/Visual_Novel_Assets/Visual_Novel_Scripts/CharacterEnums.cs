@@ -6,9 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Assets.Visual_Novel_Assests.Visual_Novel_Scripts
+namespace Assets.Visual_Novel_Assets.Visual_Novel_Scripts
 {
-   public enum CharacterName { Alice, Player };
+
+   
+   public enum CharacterName { Alice, Player};
 
    public enum CharacterPosition { Center, Left, Right };
 

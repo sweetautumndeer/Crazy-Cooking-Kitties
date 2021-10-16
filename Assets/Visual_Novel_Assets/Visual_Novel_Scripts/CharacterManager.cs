@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Linq;
-using Assets.Visual_Novel_Assests.Visual_Novel_Scripts;
+using Assets.Visual_Novel_Assets.Visual_Novel_Scripts;
 
 public class CharacterManager : MonoBehaviour
 {

@@ -314,6 +314,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inkJsonAsset: {fileID: 4900000, guid: bccffa4c290702a4aa7bcfadbb06591a, type: 3}
   _textField: {fileID: 342118559}
+  _choiceButtonContainer: {fileID: 0}
+  _choiceButtonPrefab: {fileID: 0}
+  _normalTextColor: {r: 0, g: 0, b: 0, a: 0}
+  _thoughtTextColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!4 &1071248080
 Transform:
   m_ObjectHideFlags: 0
@@ -338,6 +342,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1460712550}
   - component: {fileID: 1460712549}
+  - component: {fileID: 1460712552}
+  - component: {fileID: 1460712551}
   m_Layer: 0
   m_Name: CharacterManager
   m_TagString: Untagged
@@ -372,8 +378,50 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1460712551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460712548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 783618df2a3edb446a102948589230c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 3
+  Fine: {fileID: 0}
+  Sad: {fileID: 0}
+  SadHappy: {fileID: 0}
+  Upset: {fileID: 21300000, guid: 1083d50315cd26344a21eb65a3fc6b0c, type: 3}
+  Serious: {fileID: 0}
+  Surprised: {fileID: 0}
+  Crying: {fileID: 0}
+  Uncomfortable: {fileID: 0}
+--- !u!114 &1460712552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1460712548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 783618df2a3edb446a102948589230c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: 2
+  Fine: {fileID: 21300000, guid: 1c5e6fbd53968de4f978b79507a91bd8, type: 3}
+  Sad: {fileID: 0}
+  SadHappy: {fileID: 0}
+  Upset: {fileID: 0}
+  Serious: {fileID: 0}
+  Surprised: {fileID: 0}
+  Crying: {fileID: 0}
+  Uncomfortable: {fileID: 0}
 --- !u!1 &1823870536
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,7 +504,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1823870540
 MonoBehaviour:
@@ -764,7 +812,7 @@ RectTransform:
   - {fileID: 1928067327}
   - {fileID: 342118558}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Assets.Visual_Novel_Assests.Visual_Novel_Scripts;
+using Assets.Visual_Novel_Assets.Visual_Novel_Scripts;
 
 public class CharacterMoods : MonoBehaviour
 {
