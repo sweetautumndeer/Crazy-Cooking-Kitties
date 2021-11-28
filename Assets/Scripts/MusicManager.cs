@@ -247,7 +247,7 @@ public class MusicManager : MonoBehaviour {
     private void CalculateSongPercentageSlider() {
         float songPercentage = ((float) input.keyPos / (float) musicEnd);
         if (songPercentage > 1) { songPercentage = 1; }
-        songSlider.sizeDelta = new Vector2(songPercentage * songSliderBG.sizeDelta.x, songSliderBG.sizeDelta.y);
+        songSlider.sizeDelta = new Vector2(songSliderBG.sizeDelta.x, songPercentage * songSliderBG.sizeDelta.y);
     }
 
     // Stop music when object is destroyed

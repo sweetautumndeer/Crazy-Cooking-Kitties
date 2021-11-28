@@ -172,23 +172,24 @@ public class FishHandler : RhythmVisuals {
         musicInstance.getTimelinePosition(out keyPos); // current song position
 
         float beatsPerSec = bpm / 60f;
-        float markerDistance = x.fish.GetChild(3).position.x - x.fish.GetChild(2).position.x; // distance between two markers on the fish
-        markerDistance = 0.8f;
+        float markerDistance = (Quaternion.Inverse(x.fish.rotation) * x.fish.GetChild(0).GetChild(1).position).x - 
+                               (Quaternion.Inverse(x.fish.rotation) * x.fish.GetChild(0).GetChild(0).position).x; // distance between first two markers on the fish
         float beatDistance = 1.5f; // beats between said two markers
         float unitsPerSec =  markerDistance / beatDistance * beatsPerSec; // speed at which the knife should move
 
         float t = (keyPos - x.markerPos) - input.offset; // time to/until the first marker, with offset accounted for
-        float firstNote = x.fish.GetChild(2).position.x; // x coor of the first marker
-        firstNote = -0.4f;
+        float firstNote = (Quaternion.Inverse(x.fish.rotation) * (x.fish.GetChild(0).GetChild(0).position - x.fish.GetChild(0).position)).x; // x coor of the first marker
         float unitsPerMS = unitsPerSec / 1000f; // changed to ms for finer movement
 
-        float result = firstNote + t * unitsPerMS; // full x position lerp with respect to song time
-        x.fish.GetChild(1).position = (x.fish.rotation * new Vector3(result, 0.75f, -2.0f) + x.fish.position); // account for prefab rotation and position
+        float result = - firstNote - t * unitsPerMS; // full x position lerp with respect to song time
+        Debug.Log(result);
+        x.fish.GetChild(1).position = (x.fish.rotation * new Vector3(0, 0.75f, -2.0f) + x.fish.position);
+        x.fish.GetChild(0).position = (x.fish.rotation * new Vector3(result, 0, 0) + x.fish.position); // account for prefab rotation and position
     }
 
     public override void Hit() {
         try {
-            Transform slice = currentFish[currentFishNum].fish.GetChild(2 + currentFish[currentFishNum].state++);
+            Transform slice = currentFish[currentFishNum].fish.GetChild(0).GetChild(currentFish[currentFishNum].state++);
             slice.GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
             slice.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
             if (currentFish[currentFishNum].state == currentFish[currentFishNum].finalState) {
@@ -201,7 +202,7 @@ public class FishHandler : RhythmVisuals {
 
     public override void Miss() {
         try {
-            Transform slice = currentFish[currentFishNum].fish.GetChild(2 + currentFish[currentFishNum].state++);
+            Transform slice = currentFish[currentFishNum].fish.GetChild(0).GetChild(currentFish[currentFishNum].state++);
             slice.GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
             slice.GetChild(0).GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
             if (currentFish[currentFishNum].state == currentFish[currentFishNum].finalState) {

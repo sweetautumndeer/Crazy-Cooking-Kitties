@@ -31,9 +31,7 @@ public class MainMenuButtons : MonoBehaviour {
         MainPanel.SetActive(true);
     }
 
-    public void LoadLevel1() {
-        SceneManager.LoadScene("Level1");
-    }
+    public void LoadLevel1() { SceneManager.LoadScene("Level1"); }
     #endregion
 
     public void ShowOptions() { OptionsPanel.SetActive(true); }

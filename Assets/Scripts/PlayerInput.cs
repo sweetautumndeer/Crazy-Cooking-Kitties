@@ -21,7 +21,9 @@ public class PlayerInput : MonoBehaviour {
     private string keystroke;
 
     // Defines window for hitting a note
-    public int hitWindow;
+    public int excellentWindow = 50;
+    public int greatWindow = 100;
+    public int goodWindow = 150;
     public int offset;
     public int missWindow;
 
@@ -33,6 +35,12 @@ public class PlayerInput : MonoBehaviour {
     [HideInInspector] public int upTargetPos;
     private int nextMarker;
 
+    //variables for player score
+    [HideInInspector] public int playerScore = 0;
+    public int goodValue = 50;
+    public int greatValue = 100;
+    public int excellentValue = 200;
+
     #region Rhythm Functions
     // Check wether input is close to an FMOD "Hit" Marker
     void RhythmCheck(int target, string direction) {
@@ -41,9 +49,16 @@ public class PlayerInput : MonoBehaviour {
         Debug.Log("Proximity to Marker: " + diff);
 
         // If within the hit window, the note was hit
-        if (diff > 0 - hitWindow + offset && diff < hitWindow + offset) {
+        if (diff > 0 - excellentWindow + offset && diff < excellentWindow + offset) {
+            playerScore += excellentValue;
             Hit(direction);
-        } else if (diff > 0 - missWindow + offset && diff < hitWindow + offset) {
+        } else if (diff > 0 - greatWindow + offset && diff < greatWindow + offset) {
+            playerScore += greatValue;
+            Hit(direction);
+        } else if (diff > 0 - goodWindow + offset && diff < goodWindow + offset) {
+            playerScore += goodValue;
+            Hit(direction);
+        } else if (diff > 0 - missWindow + offset && diff < goodWindow + offset) {
             Miss(direction);
         }
     }
@@ -54,6 +69,7 @@ public class PlayerInput : MonoBehaviour {
         Debug.Log("Hit! :>");
         visuals.Hit();
         music.IncrementInputMarkers(direction);
+        Debug.Log("Score: " + playerScore);
     }
     void Miss(string direction) {
         Debug.Log("Miss :<");
@@ -89,13 +105,13 @@ public class PlayerInput : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.UpArrow))
             RhythmCheck(upTargetPos, "Up");
         // if reasonably past hit window of the current note (to avoid players hitting near this point and missing two notes at once)
-        if (keyPos > downTargetPos + hitWindow + 3 * offset)
+        if (keyPos > downTargetPos + goodWindow + 3 * offset)
             Miss("Down");
-        if (keyPos > rightTargetPos + hitWindow + 3 * offset)
+        if (keyPos > rightTargetPos + goodWindow + 3 * offset)
             Miss("Right");
-        if (keyPos > leftTargetPos + hitWindow + 3 * offset)
+        if (keyPos > leftTargetPos + goodWindow + 3 * offset)
             Miss("Left");
-        if (keyPos > upTargetPos + hitWindow + 3 * offset)
+        if (keyPos > upTargetPos + goodWindow + 3 * offset)
             Miss("Up");
     }
     #endregion
