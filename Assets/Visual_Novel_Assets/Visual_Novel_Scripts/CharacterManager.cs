@@ -8,7 +8,6 @@ using Assets.Visual_Novel_Assets.Visual_Novel_Scripts;
 
 public class CharacterManager : MonoBehaviour
 {
-
     private List<Character> _characters;
 
     [SerializeField]
@@ -137,5 +136,4 @@ public class CharacterManager : MonoBehaviour
                 return null;
         }
     }
-    
 }

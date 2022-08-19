@@ -1,23 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class NextButtonScript : MonoBehaviour
 {
-    private InkManager _inkManager;
+    InkManager _inkManager;
 
-  void Start()
-  {
-    _inkManager = FindObjectOfType<InkManager>();
-
-    if (_inkManager == null)
+    void Start()
     {
-      Debug.LogError("Ink Manager was not found!");
+        _inkManager = FindObjectOfType<InkManager>();
+        if (_inkManager == null)
+        {
+            Debug.LogError("Ink Manager was not found!");
+        }
     }
-  }
 
-  public void OnClick()
-  {
-    _inkManager?.DisplayNextLine();
-  }
+    public void OnClick()
+    {
+        _inkManager?.DisplayNextLine();
+    }
 }
